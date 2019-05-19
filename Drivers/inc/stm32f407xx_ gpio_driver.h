@@ -57,9 +57,9 @@ typedef struct
 #define GPIO_MODE_OUT		1
 #define GPIO_MODE_ALTFN 	2
 #define GPIO_MODE_ANALOG 	3
-#define GPIO_MODE_IT_FT		4	//gpio falling edge
-#define GPIO_MODE_IT_RT		5	//gpio rising edge
-#define GPIO_MODE_IT_RFT	6	//gpio mode rising edge falling edge
+#define GPIO_MODE_IT_FT		4	//gpio falling edge interrupt mode
+#define GPIO_MODE_IT_RT		5	//gpio rising edge interrupt mode
+#define GPIO_MODE_IT_RFT	6	//gpio mode rising edge falling edge interrupt mode
 
 /*@GPIO_PIN_OPTYPE
  * GPIO pin possible output types
@@ -115,7 +115,8 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
 /*
  * IRQ Configuration and ISR handling
  */
-void GPIO_IRQConfig(uint8_t IRQPriority, uint8_t EnorDi);
+void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi);
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
 void GPIO_IRQHandling(uint8_t PinNumber);
 
 

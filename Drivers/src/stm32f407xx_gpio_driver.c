@@ -139,7 +139,7 @@ void GPIO_Init(GPIO__Handle_t *pGPIOHandle){
 		uint8_t temp2 = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber %4;
 		uint8_t portcode= GPIO_BASEADDR_TO_CODE(pGPIOHandle->pGPIOx);
 		SYSCFG_PCLK_EN();
-		SYSCFG->EXTICR[temp1]= portcode << (temp *4);
+		SYSCFG->EXTICR[temp1]= portcode << (temp2 *4);
 
 		//3. enable EXTI into delivery using IMR
 		EXTI->IMR |= 1<<pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber;
@@ -324,14 +324,100 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber){
 	pGPIOx->ODR ^= (1<<PinNumber); //bitwise XOR
 }
 
-/*
- * IRQ Configuration and ISR handling
+
+/***********************************************************************
+ *	@fn					-GPIO_IRQInterruptConfig
+ *
+ *	@brief				-
+ *
+ *	@param[in]			-
+ *	@param[in]			-
+ *	@param[in]			-
+ *
+ *	@return				-
+ *
+ *	@note				-
  */
-void GPIO_IRQConfig(uint8_t IRQPriority, uint8_t EnorDi){
+void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi)
+{
+	if(EnorDi==ENABLE){
+		if(IRQNumber<=31)
+		{
+			//program ISER0 register
+			*NVIC_ISER0 |= (1<< IRQNumber);
+		}else if(IRQNumber>31 && IRQNumber<64)
+		{
+			//program ISER1 register
+			*NVIC_ISER1 |= (1<< IRQNumber%32);
+
+
+		}else if(IRQNumber>=64 && IRQNumber<96)
+		{
+			//program ISER2 register
+			*NVIC_ISER3 |= (1<< IRQNumber%64);
+
+		}
+	}else{
+		if(IRQNumber<=31){
+			//program ISER0 register
+			*NVIC_ICER0 |= (1<< IRQNumber);
+		}else if(IRQNumber>31 && IRQNumber<64){
+			//program ISER1 register
+			*NVIC_ICER1 |= (1<< IRQNumber%32);
+		}else if(IRQNumber>=64 && IRQNumber<96){
+			//program ISER2 register
+			*NVIC_ICER3 |= (1<< IRQNumber%64);
+				}
+	}
+}
+
+/***********************************************************************
+ *	@fn					-GPIO_IRQPriorityConfig
+ *
+ *	@brief				-
+ *
+ *	@param[in]			-
+ *	@param[in]			-
+ *	@param[in]			-
+ *
+ *	@return				-
+ *
+ *	@note				-iprx is which IPR register it is. All register 32 bit and divided 4 IRQ. IPR0-->IRQ0_PRI,IRQ1_PRI,IRQ2_PRI,IRQ3_PRI
+ *						-IRQ have 4 bit low and 4 bit high bit so if IRQ0 will be b00001000 wrong. We should shift left 4 bit because lower 4 bit not implemented
+ */
+
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority)
+{
+	//first lets find out the IPR register
+	uint8_t iprx=IRQNumber/4;
+	uint8_t iprx_section=IRQNumber%4;
+
+	uint8_t shift_amount=(8*iprx_section)+(8-NO_PR_BITS_IMPLEMENTED);
+	*(NVIC_PR_BASE_ADDR + iprx) |= (IRQPriority <<shift_amount);
 
 }
+/***********************************************************************
+ *	@fn					-GPIO_IRQHandling
+ *
+ *	@brief				-
+ *
+ *	@param[in]			-
+ *	@param[in]			-
+ *	@param[in]			-
+ *
+ *	@return				-
+ *
+ *	@note				-
+ */
+
 void GPIO_IRQHandling(uint8_t PinNumber){
 
+	//clear the EXTI or register corresponding to the pin number
+	if(EXTI->PR & (1<<PinNumber))
+	{
+		//clear
+		EXTI->PR |= (1<<PinNumber);
+	}
 }
 
 
