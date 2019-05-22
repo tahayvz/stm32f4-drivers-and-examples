@@ -29,6 +29,7 @@ int main(void){
 	GPIO_PeriClockControl(GPIOD,ENABLE);
 	GPIO_Init(&GpioLed);
 
+	//this is Btn gpio configuration
 	GPIOBtn.pGPIOx=GPIOA;
 	GPIOBtn.GPIO_PinConfig.GPIO_PinNumber=GPIO_PIN_NO_0;
 	GPIOBtn.GPIO_PinConfig.GPIO_PinMode=GPIO_MODE_IN;

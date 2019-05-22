@@ -79,6 +79,9 @@ void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi){
 		}else if(pGPIOx==GPIOH)
 		{
 		GPIOH_PCLK_DI();
+		}else if(pGPIOx==GPIOI)
+		{
+		GPIOI_PCLK_DI();
 		}
 		}
 }

@@ -4,12 +4,15 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Drivers/src/stm324f407xx_spi_driver.c \
 ../Drivers/src/stm32f407xx_gpio_driver.c 
 
 OBJS += \
+./Drivers/src/stm324f407xx_spi_driver.o \
 ./Drivers/src/stm32f407xx_gpio_driver.o 
 
 C_DEPS += \
+./Drivers/src/stm324f407xx_spi_driver.d \
 ./Drivers/src/stm32f407xx_gpio_driver.d 
 
 
