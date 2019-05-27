@@ -241,7 +241,7 @@ void GPIO_DeInit(GPIO_RegDef_t *pGPIOx){
 uint8_t GPIO_ReadFromInputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber){
 
 	uint8_t value;
-	value=(uint8_t)((pGPIOx->IDR >> PinNumber) & 0x00000001); //shift IDR0 posisition for read
+	value=(uint8_t)((pGPIOx->IDR >> PinNumber) & 0x00000001); //shift IDR0 position for read
 	return value; //return 0 or 1
 }
 

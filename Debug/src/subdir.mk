@@ -4,13 +4,13 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../src/008spi_cmd_handling.c 
+../src/014i2c_slave_tx_string2.c 
 
 OBJS += \
-./src/008spi_cmd_handling.o 
+./src/014i2c_slave_tx_string2.o 
 
 C_DEPS += \
-./src/008spi_cmd_handling.d 
+./src/014i2c_slave_tx_string2.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

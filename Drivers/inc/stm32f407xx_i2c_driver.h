@@ -51,9 +51,9 @@ typedef struct
 /*
  * @I2C_SCLSpeed
  */
-#define I2C_SCL_SPEED_SM 	100000
-#define I2C_SCL_SPEED_FM4K 	400000
-#define I2C_SCL_SPEED_FM2K  200000
+#define I2C_SCL_SPEED_SM 	100000	//kHz Standard mode
+#define I2C_SCL_SPEED_FM4K 	400000	//kHz Fast mode 4k
+#define I2C_SCL_SPEED_FM2K  200000	//kHz Fast mode 2k
 
 
 /*

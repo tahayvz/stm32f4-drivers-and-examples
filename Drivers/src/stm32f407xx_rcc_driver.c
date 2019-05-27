@@ -22,17 +22,17 @@ uint32_t RCC_GetPCLK1Value(void)
 
 	uint8_t clksrc,temp,ahbp,apb1p;
 
-	clksrc = ((RCC->CFGR >> 2) & 0x3);
+	clksrc = ((RCC->CFGR >> 2) & 0x3); //CFGR bit position move 2-3 bits to 0-1 bits and 0x3 bitwise mask out all other bits except 0 or 1
 
 	if(clksrc == 0 )
 	{
-		SystemClk = 16000000;
+		SystemClk = 16000000;	//HSI
 	}else if(clksrc == 1)
 	{
-		SystemClk = 8000000;
+		SystemClk = 8000000;	//HSE
 	}else if (clksrc == 2)
 	{
-		SystemClk = RCC_GetPLLOutputClock();
+		SystemClk = RCC_GetPLLOutputClock(); 	//PLL
 	}
 
 	//for ahb
@@ -53,7 +53,7 @@ uint32_t RCC_GetPCLK1Value(void)
 
 	if(temp < 4)
 	{
-		apb1p = 1;
+		apb1p = 1; //AHB clock not divided
 	}else
 	{
 		apb1p = APB1_PreScaler[temp-4];
@@ -95,7 +95,7 @@ uint32_t RCC_GetPCLK2Value(void)
 	}
 	tmp = (RCC->CFGR >> 4 ) & 0xF;
 
-	if(tmp < 0x08)
+	if(tmp < 0x08) //SCLK not divided
 	{
 		ahbp = 1;
 	}else
