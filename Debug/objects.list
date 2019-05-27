@@ -2,6 +2,5 @@
 "Drivers/src/stm32f407xx_gpio_driver.o"
 "Drivers/src/stm32f407xx_i2c_driver.o"
 "Drivers/src/stm32f407xx_rcc_driver.o"
-"Drivers/src/stm32f407xx_usart_driver.o"
 "src/014i2c_slave_tx_string2.o"
 "startup/startup_stm32.o"

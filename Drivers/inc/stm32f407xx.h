@@ -641,7 +641,6 @@ typedef struct
 #include "stm32f407xx_ gpio_driver.h"
 #include "stm32f407xx_spi_driver.h"
 #include "stm32f407xx_i2c_driver.h"
-#include "stm32f407xx_usart_driver.h"
 #include "stm32f407xx_rcc_driver.h"
 
 #endif /* INC_STM3F407XX_H_ */

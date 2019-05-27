@@ -7,22 +7,19 @@ C_SRCS += \
 ../Drivers/src/stm324f407xx_spi_driver.c \
 ../Drivers/src/stm32f407xx_gpio_driver.c \
 ../Drivers/src/stm32f407xx_i2c_driver.c \
-../Drivers/src/stm32f407xx_rcc_driver.c \
-../Drivers/src/stm32f407xx_usart_driver.c 
+../Drivers/src/stm32f407xx_rcc_driver.c 
 
 OBJS += \
 ./Drivers/src/stm324f407xx_spi_driver.o \
 ./Drivers/src/stm32f407xx_gpio_driver.o \
 ./Drivers/src/stm32f407xx_i2c_driver.o \
-./Drivers/src/stm32f407xx_rcc_driver.o \
-./Drivers/src/stm32f407xx_usart_driver.o 
+./Drivers/src/stm32f407xx_rcc_driver.o 
 
 C_DEPS += \
 ./Drivers/src/stm324f407xx_spi_driver.d \
 ./Drivers/src/stm32f407xx_gpio_driver.d \
 ./Drivers/src/stm32f407xx_i2c_driver.d \
-./Drivers/src/stm32f407xx_rcc_driver.d \
-./Drivers/src/stm32f407xx_usart_driver.d 
+./Drivers/src/stm32f407xx_rcc_driver.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
