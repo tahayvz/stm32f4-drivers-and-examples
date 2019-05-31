@@ -25,8 +25,8 @@ typedef struct
 
 typedef struct
 {
-	GPIO_RegDef_t *pGPIOx;	//this holds the base address of the GPIO port to which the pin belongs
-	GPIO_PinConfig_t GPIO_PinConfig; //this holds GPIO pin config settings
+	GPIO_RegDef_t *pGPIOx;	//this holds the base address of the GPIO port
+	GPIO_PinConfig_t GPIO_PinConfig; //this holds GPIO pin configuration settings
 }GPIO__Handle_t;
 
 /*
@@ -57,15 +57,15 @@ typedef struct
 #define GPIO_MODE_OUT		1
 #define GPIO_MODE_ALTFN 	2
 #define GPIO_MODE_ANALOG 	3
-#define GPIO_MODE_IT_FT		4	//gpio falling edge interrupt mode
-#define GPIO_MODE_IT_RT		5	//gpio rising edge interrupt mode
-#define GPIO_MODE_IT_RFT	6	//gpio mode rising edge falling edge interrupt mode
+#define GPIO_MODE_IT_FT		4	//GPIO falling edge interrupt mode
+#define GPIO_MODE_IT_RT		5	//GPIO rising edge interrupt mode
+#define GPIO_MODE_IT_RFT	6	//GPIO mode rising edge falling edge interrupt mode
 
 /*@GPIO_PIN_OPTYPE
  * GPIO pin possible output types
  */
-#define GPIO_OP_TYPE_PP		0
-#define GPIO_OP_TYPE_OD		1
+#define GPIO_OP_TYPE_PP		0	//push-pull
+#define GPIO_OP_TYPE_OD		1	//open drain
 
 /*
  * @GPIO_PIN_SPEED

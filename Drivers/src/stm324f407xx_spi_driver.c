@@ -82,18 +82,18 @@ void SPI_Init(SPI_Handle_t *pSPIHandle)
 
 	uint32_t tempreg = 0;
 
-	//1. configure the device mode
+	//1. configure the device mode master or slave
 	tempreg |= pSPIHandle->SPIConfig.SPI_DeviceMode << SPI_CR1_MSTR ;
 
-	//2. Configure the bus config
+	//2. Configure the bus config full duplex, half duplex or simplex
 	if(pSPIHandle->SPIConfig.SPI_BusConfig == SPI_BUS_CONFIG_FD)
 	{
-		//bidi mode should be cleared
+		//bidi mode should be cleared. 2-line unidirectional data mode selected
 		tempreg &= ~( 1 << SPI_CR1_BIDIMODE);
 
 	}else if (pSPIHandle->SPIConfig.SPI_BusConfig == SPI_BUS_CONFIG_HD)
 	{
-		//bidi mode should be set
+		//bidi mode should be set	1-line bidirectional data mode selected
 		tempreg |= ( 1 << SPI_CR1_BIDIMODE);
 	}else if (pSPIHandle->SPIConfig.SPI_BusConfig == SPI_BUS_CONFIG_SIMPLEX_RXONLY)
 	{
@@ -149,6 +149,20 @@ void SPI_DeInit(SPI_RegDef_t *pSPIx)
 	}
 }
 
+/*********************************************************************
+ * @fn      		  - SPI_GetFlagStatus
+ *
+ * @brief             -flags: FRE, BSY, OVR, MODF, CRC, ERR, UDR, CHSIDE, TXE, RXNE
+ *
+ * @param[in]         -
+ * @param[in]         -
+ * @param[in]         -
+ *
+ * @return            -0 or 1
+ *
+ * @Note              -
+
+ */
 uint8_t SPI_GetFlagStatus(SPI_RegDef_t *pSPIx , uint32_t FlagName)
 {
 	if(pSPIx->SR & FlagName)
@@ -244,7 +258,7 @@ void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t Len)
 /*********************************************************************
  * @fn      		  - SPI_PeripheralControl
  *
- * @brief             -
+ * @brief             -SPI enable and disable
  *
  * @param[in]         -
  * @param[in]         -
@@ -272,7 +286,7 @@ void SPI_PeripheralControl(SPI_RegDef_t *pSPIx, uint8_t EnOrDi)
 /*********************************************************************
  * @fn      		  - SPI_SSIConfig
  *
- * @brief             -
+ * @brief             -Internal Slave Select
  *
  * @param[in]         -
  * @param[in]         -
@@ -280,8 +294,8 @@ void SPI_PeripheralControl(SPI_RegDef_t *pSPIx, uint8_t EnOrDi)
  *
  * @return            -
  *
- * @Note              -
-
+ * @Note              -This bit has an effect only when the SSM bit is set. The value of this bit is forced onto the NSS pin
+ *					   and the IO value of the NSS pin is ignored.
  */
 void  SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t EnOrDi)
 {
@@ -300,7 +314,7 @@ void  SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t EnOrDi)
 /*********************************************************************
  * @fn      		  - SPI_SSOEConfig
  *
- * @brief             -
+ * @brief             -SS output enable
  *
  * @param[in]         -
  * @param[in]         -
@@ -329,13 +343,13 @@ void  SPI_SSOEConfig(SPI_RegDef_t *pSPIx, uint8_t EnOrDi)
 /*********************************************************************
  * @fn      		  - SPI_IRQInterruptConfig
  *
- * @brief             -
+ * @brief             -interrupt enable of set or clear
  *
- * @param[in]         -
- * @param[in]         -
+ * @param[in]         -IRQ number (priority)
+ * @param[in]         -Enable or Disable
  * @param[in]         -
  *
- * @return            -
+ * @return            -none
  *
  * @Note              -
 
@@ -384,6 +398,34 @@ void SPI_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi)
 /*********************************************************************
  * @fn      		  - SPI_IRQPriorityConfig
  *
+ * @brief             -The interrupt priority registers provide an 8-bit priority field for each interrupt, and each register
+ *					   holds four priority fields
+ *
+ * @param[in]         -
+ * @param[in]         -
+ * @param[in]         -
+ *
+ * @return            -
+ *
+ * @Note              -iprx is IPR register. All register 32 bit and divided 4 IRQ. IPR0-->IRQ0_PRI, IRQ1_PRI, IRQ2_PRI, IRQ3_PRI
+ *					  -IRQ have 4 bit low and 4 bit high bit so if IRQ0 will be b00001000 wrong. We should shift left 4 bit because lower 4 bit not implemented
+ */
+void SPI_IRQPriorityConfig(uint8_t IRQNumber,uint32_t IRQPriority)
+{
+	//1. first lets find out the ipr register
+	uint8_t iprx = IRQNumber / 4; //interrupt number
+	uint8_t iprx_section  = IRQNumber %4 ;	//byte offset. Byte offset 0 refers to register bits[7:0], offset 1 refers bits[8:15], offset 2 refers bits[16:23], offset 3 refers bits[24:31]
+
+	uint8_t shift_amount = ( 8 * iprx_section) + ( 8 - NO_PR_BITS_IMPLEMENTED) ;
+
+	*(  NVIC_PR_BASE_ADDR + iprx ) |=  ( IRQPriority << shift_amount );
+
+}
+
+
+/*********************************************************************
+ * @fn      		  - SPI_SendDataIT
+ *
  * @brief             -
  *
  * @param[in]         -
@@ -393,21 +435,8 @@ void SPI_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi)
  * @return            -
  *
  * @Note              -
-
+ *
  */
-void SPI_IRQPriorityConfig(uint8_t IRQNumber,uint32_t IRQPriority)
-{
-	//1. first lets find out the ipr register
-	uint8_t iprx = IRQNumber / 4;
-	uint8_t iprx_section  = IRQNumber %4 ;
-
-	uint8_t shift_amount = ( 8 * iprx_section) + ( 8 - NO_PR_BITS_IMPLEMENTED) ;
-
-	*(  NVIC_PR_BASE_ADDR + iprx ) |=  ( IRQPriority << shift_amount );
-
-}
-
-
 uint8_t SPI_SendDataIT(SPI_Handle_t *pSPIHandle,uint8_t *pTxBuffer, uint32_t Len)
 {
 	uint8_t state = pSPIHandle->TxState;
@@ -426,11 +455,24 @@ uint8_t SPI_SendDataIT(SPI_Handle_t *pSPIHandle,uint8_t *pTxBuffer, uint32_t Len
 
 	}
 
-
 	return state;
 }
 
 
+/*********************************************************************
+ * @fn      		  - SPI_ReceiveDataIT
+ *
+ * @brief             -
+ *
+ * @param[in]         -
+ * @param[in]         -
+ * @param[in]         -
+ *
+ * @return            -
+ *
+ * @Note              -
+ *
+ */
 uint8_t SPI_ReceiveDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pRxBuffer, uint32_t Len)
 {
 	uint8_t state = pSPIHandle->RxState;
@@ -449,15 +491,25 @@ uint8_t SPI_ReceiveDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pRxBuffer, uint32_t
 
 	}
 
-
 	return state;
 
 }
 
 
-
-
-
+/*********************************************************************
+ * @fn      		  - SPI_IRQHandling
+ *
+ * @brief             -
+ *
+ * @param[in]         -
+ * @param[in]         -
+ * @param[in]         -
+ *
+ * @return            -
+ *
+ * @Note              -
+ *
+ */
 void SPI_IRQHandling(SPI_Handle_t *pHandle)
 {
 
@@ -496,8 +548,20 @@ void SPI_IRQHandling(SPI_Handle_t *pHandle)
 }
 
 
-//some helper function implementations
-
+/*********************************************************************
+ * @fn      		  - spi_txe_interrupt_handle
+ *
+ * @brief             -
+ *
+ * @param[in]         -
+ * @param[in]         -
+ * @param[in]         -
+ *
+ * @return            -
+ *
+ * @Note              -
+ *
+ */
 static void  spi_txe_interrupt_handle(SPI_Handle_t *pSPIHandle)
 {
 	// check the DFF bit in CR1
@@ -519,9 +583,7 @@ static void  spi_txe_interrupt_handle(SPI_Handle_t *pSPIHandle)
 
 	if(! pSPIHandle->TxLen)
 	{
-		//TxLen is zero , so close the spi transmission and inform the application that
-		//TX is over.
-
+		//TxLen is zero , so close the spi transmission and inform the application that TX is over.
 		//this prevents interrupts from setting up of TXE flag
 		SPI_CloseTransmisson(pSPIHandle);
 		SPI_ApplicationEventCallback(pSPIHandle,SPI_EVENT_TX_CMPLT);
@@ -530,6 +592,20 @@ static void  spi_txe_interrupt_handle(SPI_Handle_t *pSPIHandle)
 }
 
 
+/*********************************************************************
+ * @fn      		  - spi_rxne_interrupt_handle
+ *
+ * @brief             -
+ *
+ * @param[in]         -
+ * @param[in]         -
+ * @param[in]         -
+ *
+ * @return            -
+ *
+ * @Note              -
+ *
+ */
 static void  spi_rxne_interrupt_handle(SPI_Handle_t *pSPIHandle)
 {
 	//do rxing as per the dff

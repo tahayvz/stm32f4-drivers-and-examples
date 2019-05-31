@@ -124,7 +124,7 @@ int main(void)
 	//enable the i2c peripheral
 	I2C_PeripheralControl(I2C1,ENABLE);
 
-	//ack bit is made 1 after PE=1
+	//ack bit is made 1 after PE=1 (peripheral enabled)
 	I2C_ManageAcking(I2C1,I2C_ACK_ENABLE);
 
 	while(1)

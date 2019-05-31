@@ -496,7 +496,8 @@ void I2C_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi)
  *
  * @return            -
  *
- * @Note              -
+ * @Note              -iprx is IPR register. All register 32 bit and divided 4 IRQ. IPR0-->IRQ0_PRI, IRQ1_PRI, IRQ2_PRI, IRQ3_PRI
+ *					  -IRQ have 4 bit low and 4 bit high bit so if IRQ0 will be b00001000 wrong. We should shift left 4 bit because lower 4 bit not implemented
  */
 void I2C_IRQPriorityConfig(uint8_t IRQNumber,uint32_t IRQPriority)
 {

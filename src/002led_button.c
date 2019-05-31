@@ -29,7 +29,7 @@ int main(void){
 	GPIO_PeriClockControl(GPIOD,ENABLE);
 	GPIO_Init(&GpioLed);
 
-	//this is Btn gpio configuration
+	//this is Btn GPIO configuration
 	GPIOBtn.pGPIOx=GPIOA;
 	GPIOBtn.GPIO_PinConfig.GPIO_PinNumber=GPIO_PIN_NO_0;
 	GPIOBtn.GPIO_PinConfig.GPIO_PinMode=GPIO_MODE_IN;
@@ -44,7 +44,7 @@ int main(void){
 	{
 		if(GPIO_ReadFromInputPin(GPIOA,GPIO_PIN_NO_0)==BTN_PRESSED) //pressed button return 1
 		{
-			delay(); //clearlt see toggle
+			delay(); //clear it see toggle
 			GPIO_ToggleOutputPin(GPIOD,GPIO_PIN_NO_12);
 		}
 	}

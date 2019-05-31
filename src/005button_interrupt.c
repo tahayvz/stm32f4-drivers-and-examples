@@ -6,7 +6,7 @@
  */
 
 
-#include <string.h> 		//included for memset
+#include <string.h> 		//used for memset
 #include "stm32f407xx.h"
 #define HIGH 1
 #define LOW  0

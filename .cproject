@@ -87,12 +87,12 @@
 							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.1087226315" name="Resource Custom Build Step Output Type"/>
 						</tool>
 					</fileInfo>
-					<fileInfo id="fr.ac6.managedbuild.config.gnu.cross.exe.debug.2023117103.1676241800" name="014i2c_slave_tx_string2.c" rcbsApplicability="disable" resourcePath="src/014i2c_slave_tx_string2.c" toolsToInvoke="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1895762821.279573596">
-						<tool id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1895762821.279573596" name="MCU GCC Compiler" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1895762821"/>
+					<fileInfo id="fr.ac6.managedbuild.config.gnu.cross.exe.debug.2023117103.1934945787" name="015uart_tx.c" rcbsApplicability="disable" resourcePath="src/015uart_tx.c" toolsToInvoke="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1895762821.1653295880">
+						<tool id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1895762821.1653295880" name="MCU GCC Compiler" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1895762821"/>
 					</fileInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
-						<entry excluding="013i2c_slave_tx_string.c|012i2c_master_rx_testingIT.c|011i2c_master_rx_testing.c|010i2c_master_tx_testing.c|008spi_cmd_handling.c|009spi_cmd_handling_it.c|007spi_txonly_arduino.c|006spi_tx_testing.c|005button_interrupt.c|003led-button-ext.c|main.c|002led_button.c|0012led_toggle_openDrain.c|0012led_toggle_openDrain|001led_toggle.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="015uart_tx.c|014i2c_slave_tx_string2.c|013i2c_slave_tx_string.c|012i2c_master_rx_testingIT.c|011i2c_master_rx_testing.c|010i2c_master_tx_testing.c|008spi_cmd_handling.c|009spi_cmd_handling_it.c|007spi_txonly_arduino.c|006spi_tx_testing.c|005button_interrupt.c|003led-button-ext.c|main.c|002led_button.c|0012led_toggle_openDrain.c|0012led_toggle_openDrain|001led_toggle.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 						<entry excluding="sysmem.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
 					</sourceEntries>
 				</configuration>

@@ -36,7 +36,7 @@ void I2C1_GPIOInits(void)
 	I2CPins.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_ALTFN;
 	I2CPins.GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_OD;
 	I2CPins.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_PIN_PU;
-	I2CPins.GPIO_PinConfig.GPIO_PinAltFunMode = 4;
+	I2CPins.GPIO_PinConfig.GPIO_PinAltFunMode = 4;				//for I2C AF4 used
 	I2CPins. GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
 
 	//scl

@@ -32,12 +32,12 @@ typedef struct
 {
 	SPI_RegDef_t 	*pSPIx;   /*!< This holds the base address of SPIx(x:0,1,2) peripheral >*/
 	SPI_Config_t 	SPIConfig;
-	uint8_t 		*pTxBuffer; /* !< To store the app. Tx buffer address > */
-	uint8_t 		*pRxBuffer;	/* !< To store the app. Rx buffer address > */
-	uint32_t 		TxLen;		/* !< To store Tx len > */
-	uint32_t 		RxLen;		/* !< To store Rx len > */
-	uint8_t 		TxState;	/* !< To store Tx state > */
-	uint8_t 		RxState;	/* !< To store Rx state > */
+	uint8_t 		*pTxBuffer; /* !< To store the app.  > */
+	uint8_t 		*pRxBuffer;	/* !< To store the app.  > */
+	uint32_t 		TxLen;		/* !< To store Tx len 	 > */
+	uint32_t 		RxLen;		/* !< To store Rx len 	 > */
+	uint8_t 		TxState;	/* !< To store Tx state  > */
+	uint8_t 		RxState;	/* !< To store Rx state  > */
 }SPI_Handle_t;
 
 
@@ -55,7 +55,6 @@ typedef struct
 #define SPI_EVENT_RX_CMPLT   2
 #define SPI_EVENT_OVR_ERR    3
 #define SPI_EVENT_CRC_ERR    4
-
 
 
 /*
@@ -93,14 +92,14 @@ typedef struct
 /*
  * @CPOL
  */
-#define SPI_CPOL_HIGH 1
-#define SPI_CPOL_LOW 0
+#define SPI_CPOL_HIGH  1
+#define SPI_CPOL_LOW   0
 
 /*
  * @CPHA
  */
-#define SPI_CPHA_HIGH 1
-#define SPI_CPHA_LOW 0
+#define SPI_CPHA_HIGH  1
+#define SPI_CPHA_LOW   0
 
 /*
  * @SPI_SSM

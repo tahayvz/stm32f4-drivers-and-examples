@@ -22,7 +22,7 @@ uint32_t RCC_GetPCLK1Value(void)
 
 	uint8_t clksrc,temp,ahbp,apb1p;
 
-	clksrc = ((RCC->CFGR >> 2) & 0x3); //CFGR bit position move 2-3 bits to 0-1 bits and 0x3 bitwise mask out all other bits except 0 or 1
+	clksrc = ((RCC->CFGR >> 2) & 0x3); //CFGR bit position move from 2-3 bits to 0-1 bits and 0x3 bitwise mask out all other bits except 0 or 1
 
 	if(clksrc == 0 )
 	{

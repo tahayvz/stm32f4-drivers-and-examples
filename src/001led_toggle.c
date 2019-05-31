@@ -22,7 +22,7 @@ int main(void){
 	GpioLed.GPIO_PinConfig.GPIO_PinPuPdControl=GPIO_NO_PUPD;//no pull up pull down resistor
 
 	GPIO_PeriClockControl(GPIOD,ENABLE);
-	GPIO_Init(&GpioLed); //before configuring this peripheral we enabled peripheral control. this function going lots of peripheral initialization
+	GPIO_Init(&GpioLed); //before configuring this peripheral we enabled peripheral control.
 
 	while(1)
 	{

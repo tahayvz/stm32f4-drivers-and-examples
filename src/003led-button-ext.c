@@ -5,9 +5,6 @@
  *      Author: tahay
  */
 
-
-
-
 #include "stm32f407xx.h"
 #define HIGH 1
 #define LOW  0

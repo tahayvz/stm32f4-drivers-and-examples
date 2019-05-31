@@ -31,7 +31,6 @@
 #define ANALOG_PIN4 	4
 
 //arduino led
-
 #define LED_PIN  9
 
 SPI_Handle_t SPI2handle;
@@ -161,6 +160,7 @@ int main(void)
 	*/
 	SPI_SSOEConfig(SPI2,ENABLE);
 
+	//Interrupt Set Enabled
 	SPI_IRQInterruptConfig(IRQ_NO_SPI2,ENABLE);
 
 	//wait till button is pressed
@@ -177,7 +177,7 @@ int main(void)
 
 	while(RxContFlag == SET)
 	{
-	   while ( ! (SPI_ReceiveDataIT(&SPI2handle,&ReadByte,1) == SPI_READY) );
+	   while ( ! (SPI_ReceiveDataIT(&SPI2handle, &ReadByte, 1) == SPI_READY) );
 	}
 
 
@@ -212,7 +212,7 @@ void SPI_ApplicationEventCallback(SPI_Handle_t *pSPIHandle,uint8_t AppEv)
 		{
 			if(rcv_start)
 			{
-				if(ReadByte == '\r')
+				if(ReadByte == '\r') //new line, another use for abc\rd will be dbc
 				{
 					RxContFlag = RESET;
 					rcv_start =0;

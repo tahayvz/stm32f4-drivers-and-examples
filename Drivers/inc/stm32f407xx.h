@@ -19,6 +19,7 @@
 /**********************************START:Processor Specific Details **********************************/
 /*
  * ARM Cortex Mx Processor NVIC ISERx register Addresses
+ * Interrupt Set Enable Register
  */
 
 #define NVIC_ISER0          ( (__vo uint32_t*)0xE000E100 )
@@ -29,6 +30,7 @@
 
 /*
  * ARM Cortex Mx Processor NVIC ICERx register Addresses
+ * Interrupt Clear Enable Register
  */
 #define NVIC_ICER0 			((__vo uint32_t*)0XE000E180)
 #define NVIC_ICER1			((__vo uint32_t*)0XE000E184)
@@ -69,7 +71,6 @@
 
 /*
  * Base addresses of peripherals which are hanging on AHB1 bus
- * TODO : Complete for all other peripherals
  */
 
 #define GPIOA_BASEADDR                   (AHB1PERIPH_BASEADDR + 0x0000)
@@ -84,7 +85,6 @@
 #define RCC_BASEADDR                     (AHB1PERIPH_BASEADDR + 0x3800)
 /*
  * Base addresses of peripherals which are hanging on APB1 bus
- * TODO : Complete for all other peripherals
  */
 #define I2C1_BASEADDR						(APB1PERIPH_BASEADDR + 0x5400)
 #define I2C2_BASEADDR						(APB1PERIPH_BASEADDR + 0x5800)
@@ -100,7 +100,6 @@
 
 /*
  * Base addresses of peripherals which are hanging on APB2 bus
- * TODO : Complete for all other peripherals
  */
 #define EXTI_BASEADDR						(APB2PERIPH_BASEADDR + 0x3C00)
 #define SPI1_BASEADDR						(APB2PERIPH_BASEADDR + 0x3000)
@@ -118,20 +117,19 @@
  * Note : Registers of a peripheral are specific to MCU
  * e.g : Number of Registers of SPI peripheral of STM32F4x family of MCUs may be different(more or less)
  * Compared to number of registers of SPI peripheral of STM32Lx or STM32F0x family of MCUs
- * Please check your Device RM
  */
 
 typedef struct
 {
-	__vo uint32_t MODER;                        /*!< GPIO port mode register,                    	Address offset: 0x00      */
-	__vo uint32_t OTYPER;                       /*!< TODO,     										Address offset: 0x04      */
-	__vo uint32_t OSPEEDR;
-	__vo uint32_t PUPDR;
-	__vo uint32_t IDR;
-	__vo uint32_t ODR;
-	__vo uint32_t BSRR;
-	__vo uint32_t LCKR;
-	__vo uint32_t AFR[2];					 /*!< AFR[0] : GPIO alternate function low register, AF[1] : GPIO alternate function high register    		Address offset: 0x20-0x24 */
+	__vo uint32_t MODER;                        /* GPIO port mode register, @GPIO_PIN_MODES     	 	Address offset: 0x00 */
+	__vo uint32_t OTYPER;                       /* GPIO port output type register (GPIOx_OTYPER)		Address offset: 0x04 */
+	__vo uint32_t OSPEEDR;						/* GPIO port output speed register (GPIOx_OSPEEDR)		Address offset: 0x08 */
+	__vo uint32_t PUPDR;						/* GPIO port pull-up/pull-down register (GPIOx_PUPDR)	Address offset: 0x0C */
+	__vo uint32_t IDR;							/* GPIO port input data register (GPIOx_IDR)			Address offset: 0x10 */
+	__vo uint32_t ODR;							/* GPIO port output data register (GPIOx_ODR) 			Address offset: 0x14 */
+	__vo uint32_t BSRR;							/* GPIO port bit set/reset register						Address offset: 0x18*/
+	__vo uint32_t LCKR;							/* GPIO port configuration lock register				Address offset: 0x1C*/
+	__vo uint32_t AFR[2];			 /*!< AFR[0] : GPIO alternate function low register, AF[1] : GPIO alternate function high register    		Address offset: 0x20-0x24 */
 }GPIO_RegDef_t;
 
 
@@ -185,12 +183,12 @@ typedef struct
  */
 typedef struct
 {
-	__vo uint32_t IMR;    /*!< Give a short description,          	  	    Address offset: 0x00 */
-	__vo uint32_t EMR;    /*!< TODO,                						Address offset: 0x04 */
-	__vo uint32_t RTSR;   /*!< TODO,  									     Address offset: 0x08 */
-	__vo uint32_t FTSR;   /*!< TODO, 										Address offset: 0x0C */
-	__vo uint32_t SWIER;  /*!< TODO,  									   Address offset: 0x10 */
-	__vo uint32_t PR;     /*!< TODO,                   					   Address offset: 0x14 */
+	__vo uint32_t IMR;    /*!< Interrupt mask register (EXTI_IMR)          	  	 		Address offset: 0x00 */
+	__vo uint32_t EMR;    /*!< Event mask register (EXTI_EMR)                			Address offset: 0x04 */
+	__vo uint32_t RTSR;   /*!< Rising trigger selection register (EXTI_RTSR)  			Address offset: 0x08 */
+	__vo uint32_t FTSR;   /*!< Falling trigger selection register (EXTI_FTSR), 			Address offset: 0x0C */
+	__vo uint32_t SWIER;  /*!< Software interrupt event register (EXTI_SWIER)  			Address offset: 0x10 */
+	__vo uint32_t PR;     /*!< Pending register (EXTI_PR)                   			Address offset: 0x14 */
 
 }EXTI_RegDef_t;
 
@@ -219,7 +217,7 @@ typedef struct
 {
 	__vo uint32_t MEMRMP;       /*!< Give a short description,                    Address offset: 0x00      */
 	__vo uint32_t PMC;          /*!< TODO,     									  Address offset: 0x04      */
-	__vo uint32_t EXTICR[4];    /*!< TODO , 									  Address offset: 0x08-0x14 */
+	__vo uint32_t EXTICR[4];    /*!<                							  Address offset: 0x08-0x14 */
 	uint32_t      RESERVED1[2];  /*!< TODO          							  Reserved, 0x18-0x1C    	*/
 	__vo uint32_t CMPCR;        /*!< TODO         								  Address offset: 0x20      */
 	uint32_t      RESERVED2[2];  /*!<                                             Reserved, 0x24-0x28 	    */
@@ -330,7 +328,7 @@ typedef struct
 
 
 /*
- * Clock Enable Macros for SPIx peripheralsbu
+ * Clock Enable Macros for SPIx peripherals
  */
 #define SPI1_PCLK_EN() (RCC->APB2ENR |= (1 << 12))
 #define SPI2_PCLK_EN() (RCC->APB1ENR |= (1 << 14))
@@ -341,12 +339,12 @@ typedef struct
 /*
  * Clock Enable Macros for USARTx peripherals
  */
-#define USART1_PCCK_EN() (RCC->APB2ENR |= (1 << 4))
-#define USART2_PCCK_EN() (RCC->APB1ENR |= (1 << 17))
-#define USART3_PCCK_EN() (RCC->APB1ENR |= (1 << 18))
-#define UART4_PCCK_EN()  (RCC->APB1ENR |= (1 << 19))
-#define UART5_PCCK_EN()  (RCC->APB1ENR |= (1 << 20))
-#define USART6_PCCK_EN() (RCC->APB1ENR |= (1 << 5))
+#define USART1_PCLK_EN() (RCC->APB2ENR |= (1 << 4))
+#define USART2_PCLK_EN() (RCC->APB1ENR |= (1 << 17))
+#define USART3_PCLK_EN() (RCC->APB1ENR |= (1 << 18))
+#define UART4_PCLK_EN()  (RCC->APB1ENR |= (1 << 19))
+#define UART5_PCLK_EN()  (RCC->APB1ENR |= (1 << 20))
+#define USART6_PCLK_EN() (RCC->APB2ENR |= (1 << 5))
 
 /*
  * Clock Enable Macros for SYSCFG peripheral
@@ -365,12 +363,17 @@ typedef struct
 /*
  * Clock Disable Macros for USARTx peripherals
  */
-
+#define USART1_PCLK_DI() (RCC->APB2RSTR |= (1 << 4))
+#define USART2_PCLK_DI() (RCC->APB1RSTR |= (1 << 17))
+#define USART3_PCLK_DI() (RCC->APB1RSTR |= (1 << 18))
+#define UART4_PCLK_DI()  (RCC->APB1RSTR |= (1 << 19))
+#define UART5_PCLK_DI()  (RCC->APB1RSTR |= (1 << 20))
+#define USART6_PCLK_DI() (RCC->APB2RSTR |= (1 << 5))
 
 /*
  * Clock Disable Macros for SYSCFG peripheral
  */
-
+#define SYSCFG_PCLK_DI() (RCC->APB2RSTR |= (1 << 14))
 
 /*
  *  Macros to reset GPIOx peripherals
@@ -398,11 +401,9 @@ typedef struct
 #define I2C1_REG_RESET()               do{ (RCC->APB1RSTR |= (1 << 21)); (RCC->APB1RSTR &= ~(1 << 21)); }while(0)
 #define I2C2_REG_RESET()               do{ (RCC->APB1RSTR |= (1 << 22)); (RCC->APB1RSTR &= ~(1 << 22)); }while(0)
 #define I2C3_REG_RESET()               do{ (RCC->APB1RSTR |= (1 << 23)); (RCC->APB1RSTR &= ~(1 << 23)); }while(0)
+
 /*
- *  returns port code for given GPIOx base address
- */
-/*
- * This macro returns a code( between 0 to 7) for a given GPIO base address(x)
+ * This macro returns a port code( between 0 to 7) for a given GPIO base address(x)
  */
 #define GPIO_BASEADDR_TO_CODE(x)      ( (x == GPIOA)?0:\
 										(x == GPIOB)?1:\
@@ -417,8 +418,7 @@ typedef struct
 
 /*
  * IRQ(Interrupt Request) Numbers of STM32F407x MCU
- * NOTE: update these macros with valid values according to your MCU
- * TODO: You may complete this list for other peripherals
+ * EXTI 5,6,7,8,9 have same IRQ number and EXTI 10,11,12,13,14,15
  */
 
 #define IRQ_NO_EXTI0 		6
@@ -476,7 +476,7 @@ typedef struct
 #define SPI_CR1_SSI     				 8
 #define SPI_CR1_SSM      				 9
 #define SPI_CR1_RXONLY      		 	10
-#define SPI_CR1_DFF     			 	11
+#define SPI_CR1_DFF     			 	11			/*Data Frame Format 	@SPI_DFF*/
 #define SPI_CR1_CRCNEXT   			 	12
 #define SPI_CR1_CRCEN   			 	13
 #define SPI_CR1_BIDIOE     			 	14
@@ -642,5 +642,6 @@ typedef struct
 #include "stm32f407xx_spi_driver.h"
 #include "stm32f407xx_i2c_driver.h"
 #include "stm32f407xx_rcc_driver.h"
+#include "stm32f407xx_usart_driver.h"
 
 #endif /* INC_STM3F407XX_H_ */

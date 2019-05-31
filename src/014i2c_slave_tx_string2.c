@@ -153,7 +153,7 @@ void I2C_ApplicationEventCallback(I2C_Handle_t *pI2CHandle, uint8_t AppEv)
 		//slave concludes end of Tx
 
 
-		//if the current active code is 0x52 then dont invalidate
+		//if the current active code is 0x52 then don't invalidate
 		if(! (CommandCode == 0x52))
 			CommandCode = 0XFF;
 

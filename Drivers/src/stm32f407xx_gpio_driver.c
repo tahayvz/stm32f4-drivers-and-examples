@@ -94,25 +94,25 @@ void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi){
  *
  *	@brief				-
  *
- *	@param[in]			-
+ *	@param[in]			-pointer for set GPIO pin, speed, pu-pd settings, output type, alternate function
  *	@param[in]			-
  *	@param[in]			-
  *
  *	@return				-none
  *
- *	@note				-none
+ *	@note				-EXTICR[0]->EXTI0,EXTI1,EXTI2,EXTI3 	EXTICR[1]->EXTI4,EXTI5,EXTI6,EXTI7 		EXTI0->PxO (0th pin of x port) 	EXTI1->Px1
  */
 void GPIO_Init(GPIO__Handle_t *pGPIOHandle){
 
 	uint32_t temp=0; 	//temp register
 
-	//1. configure the mode of gpio pin
+	//1. configure the mode of GPIO pin
 
 	if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode<=GPIO_MODE_ANALOG)
 	{
-		//the non interrup mode
-		temp=(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode <<(2*pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber)); 	//each pin take 2 bit
-		pGPIOHandle->pGPIOx->MODER &= ~(0x3<<pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); //clearing bit non 11 will be 00
+		//the non interrupt mode
+		temp=(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode <<(2*pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber)); 	//MODERx[1:0]
+		pGPIOHandle->pGPIOx->MODER &= ~(0x3<<pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); //clearing MODER will be 00
 		pGPIOHandle->pGPIOx->MODER |=temp; //setting
 	}else
 	{
@@ -183,7 +183,7 @@ void GPIO_Init(GPIO__Handle_t *pGPIOHandle){
  *
  *	@brief				-
  *
- *	@param[in]			-
+ *	@param[in]			-GPIO port selection
  *	@param[in]			-
  *	@param[in]			-
  *
@@ -229,8 +229,8 @@ void GPIO_DeInit(GPIO_RegDef_t *pGPIOx){
  *
  *	@brief				-
  *
- *	@param[in]			-
- *	@param[in]			-
+ *	@param[in]			-GPIO port selection
+ *	@param[in]			-GPIO pin selection
  *	@param[in]			-
  *
  *	@return				-0 or 1
@@ -242,7 +242,7 @@ uint8_t GPIO_ReadFromInputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber){
 
 	uint8_t value;
 	value=(uint8_t)((pGPIOx->IDR >> PinNumber) & 0x00000001); //shift IDR0 position for read
-	return value; //return 0 or 1
+	return value;
 }
 
 /***********************************************************************
@@ -254,14 +254,14 @@ uint8_t GPIO_ReadFromInputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber){
  *	@param[in]			-
  *	@param[in]			-
  *
- *	@return				-
+ *	@return				-entire bits of IDR
  *
  *	@note				-none
  */
 uint16_t GPIO_ReadFromInputPort(GPIO_RegDef_t *pGPIOx){
 	uint16_t value;
 	value=(uint16_t)pGPIOx->IDR;
-	return value; //return entire port IDR
+	return value;
 
 }
 
@@ -283,11 +283,11 @@ void GPIO_WritetoOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber, uint8_t Val
 
 	if(Value == GPIO_PIN_SET)
 	{
-		//write 1 to the output data register at the bit field corresponding o the PinNumber
+		//write 1 to the output data register at the bit field corresponding to the PinNumber
 		pGPIOx->ODR |=(1<<PinNumber);
 	}else{
 		//write 0
-		pGPIOx->ODR &= ~(1<<PinNumber); //clearing bit position corresponding to the pinnumber in ODR
+		pGPIOx->ODR &= ~(1<<PinNumber); //clearing bit position corresponding to the pin number in ODR
 	}
 }
 
@@ -312,7 +312,7 @@ void GPIO_WritetoOutputPort(GPIO_RegDef_t *pGPIOx, uint8_t Value){
 /***********************************************************************
  *	@fn					-GPIO_ToggleOutputPin
  *
- *	@brief				-
+ *	@brief				-toggle required bit field
  *
  *	@param[in]			-
  *	@param[in]			-
@@ -320,24 +320,24 @@ void GPIO_WritetoOutputPort(GPIO_RegDef_t *pGPIOx, uint8_t Value){
  *
  *	@return				-
  *
- *	@note				-toggle required bit field
+ *	@note				-bitwise XOR=  0^0=0, 1^1=0, 1^0=1, 0^1=1
  */
 void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber){
 
-	pGPIOx->ODR ^= (1<<PinNumber); //bitwise XOR
+	pGPIOx->ODR ^= (1<<PinNumber);
 }
 
 
 /***********************************************************************
  *	@fn					-GPIO_IRQInterruptConfig
  *
- *	@brief				-
+ *	@brief				-interrupt enable of set or clear
  *
- *	@param[in]			-
- *	@param[in]			-
+ *	@param[in]			-IRQ number (priority)
+ *	@param[in]			-Enable or Disable
  *	@param[in]			-
  *
- *	@return				-
+ *	@return				-none
  *
  *	@note				-
  */
@@ -377,7 +377,8 @@ void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi)
 /***********************************************************************
  *	@fn					-GPIO_IRQPriorityConfig
  *
- *	@brief				-
+ *	@brief				-The interrupt priority registers provide an 8-bit priority field for each interrupt, and each register
+ *						-holds four priority fields
  *
  *	@param[in]			-
  *	@param[in]			-
@@ -385,16 +386,15 @@ void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi)
  *
  *	@return				-
  *
- *	@note				-iprx is which IPR register it is. All register 32 bit and divided 4 IRQ. IPR0-->IRQ0_PRI,IRQ1_PRI,IRQ2_PRI,IRQ3_PRI
+ *	@note				-iprx is IPR register. All register 32 bit and divided 4 IRQ. IPR0-->IRQ0_PRI, IRQ1_PRI, IRQ2_PRI, IRQ3_PRI
  *						-IRQ have 4 bit low and 4 bit high bit so if IRQ0 will be b00001000 wrong. We should shift left 4 bit because lower 4 bit not implemented
  */
 
 void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority)
 {
 	//first lets find out the IPR register
-	uint8_t iprx=IRQNumber/4;
-	uint8_t iprx_section=IRQNumber%4;
-
+	uint8_t iprx=IRQNumber/4;  //interrupt number
+	uint8_t iprx_section=IRQNumber%4;	//byte offset. Byte offset 0 refers to register bits[7:0], offset 1 refers bits[8:15], offset 2 refers bits[16:23], offset 3 refers bits[24:31]
 	uint8_t shift_amount=(8*iprx_section)+(8-NO_PR_BITS_IMPLEMENTED);
 	*(NVIC_PR_BASE_ADDR + iprx) |= (IRQPriority <<shift_amount);
 
@@ -402,13 +402,13 @@ void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority)
 /***********************************************************************
  *	@fn					-GPIO_IRQHandling
  *
- *	@brief				-
+ *	@brief				-This bit is cleared by programming it to ‘1’.
  *
  *	@param[in]			-
  *	@param[in]			-
  *	@param[in]			-
  *
- *	@return				-
+ *	@return				-none
  *
  *	@note				-
  */

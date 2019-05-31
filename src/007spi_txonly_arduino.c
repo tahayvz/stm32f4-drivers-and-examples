@@ -84,7 +84,7 @@ int main(void){
 	 * i.e. SPE=1, NSS will be pulled to low and NSS pin will be high when SPE=0
 	 * SSM=0 SPE=1 NSS output will be 0
 	 * SSM=0 SPE=0 NSS output will be 1
-	 * */
+	 */
 
 	SPI_SSOEConfig(SPI2,ENABLE);
 
@@ -100,7 +100,7 @@ int main(void){
 
 		//first send length information
 		uint8_t dataLen= strlen(user_data);
-		SPI_SendData(SPI2,&dataLen,1);
+		SPI_SendData(SPI2, &dataLen, 1); // 1 byte data
 
 		//to send data
 		SPI_SendData(SPI2,(uint8_t*)user_data,strlen(user_data));//arduino sketch expects 1 byte of length followed by data
